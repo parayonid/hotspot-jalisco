@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#07121e" />
+  <title>HOTSPOT · Laboratorio de seguridad geoespacial</title>
+  <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+ <div class="app">
+  <aside class="sidebar">
+   <div class="identity">
+    <div class="identity-mark"><span></span><span></span><span></span><span></span></div>
+    <div><div class="identity-name">HOTSPOT<span class="identity-period">.</span></div><div class="identity-sub">INTELIGENCIA GEOESPACIAL</div></div>
+   </div>
+   <div class="dataset-notice"><span class="dataset-dot"></span><span>CONJUNTO DE PRUEBA · SINIESTROS VIALES</span></div>
+   <div class="panel-section">
+    <h2>Explorar datos</h2>
+    <p class="section-help">Selecciona el territorio, el periodo y el tipo de incidente.</p>
+    <label for="year">AÑO</label><select id="year"></select>
+    <label for="municipio">MUNICIPIO</label><select id="municipio"></select>
+    <label for="tipo">TIPO DE SINIESTRO</label><select id="tipo"></select>
+    <button id="clear" class="clear-button" type="button">↺ &nbsp; Restablecer filtros</button>
+   </div>
+   <div class="panel-section metrics-area">
+    <div class="metric-header"><h2>Resumen</h2><span id="active-period">2025</span></div>
+    <div class="metric-main"><span class="metric-label">Siniestros con ubicación</span><strong id="count">—</strong><span class="metric-note">Eventos únicos, no personas involucradas</span></div>
+    <div class="metrics-two">
+      <div class="metric-mini"><span>Personas lesionadas*</span><strong id="injured">—</strong></div>
+      <div class="metric-mini"><span>Personas fallecidas*</span><strong id="fatal">—</strong></div>
+    </div>
+   </div>
+   <div class="panel-section chart-section">
+    <div class="metric-header"><h2>Serie temporal</h2><span id="period-unit">MESES</span></div>
+    <div id="chart" class="spark-bars" role="img" aria-label="Distribución temporal de siniestros"></div>
+    <div class="chart-key"><span id="chart-first">ENE</span><span id="chart-last">DIC</span></div>
+   </div>
+   <div class="disclaimer"><span class="disclaimer-icon">i</span><div>Los puntos corresponden a la <strong>intersección más próxima registrada</strong>, no necesariamente al lugar exacto. No son delitos ni predicciones de criminalidad. *Consecuencias según registros de personas.</div></div>
+   <div class="source-bottom">Fuente: <a href="https://iieg.jalisco.gob.mx/datos-abiertos/es/dataset/sinestralimap-2015-2025" target="_blank" rel="noopener">IIEG Jalisco · Siniestralimap</a></div>
+  </aside>
+  <main class="main">
+   <header class="topbar">
+    <div><div class="breadcrumb">LABORATORIO <span>/</span> ANÁLISIS ESPACIAL <span>/</span> ETAPA 01</div><h1>Explorador de incidentes</h1></div>
+    <div class="top-meta"><span class="live-dot"></span> BASE HISTÓRICA 2015—2025</div>
+   </header>
+   <section class="map-section">
+    <div class="map-toolbar">
+      <div class="toolbar-title"><span class="map-location-icon">⌖</span><div><strong>Área Metropolitana de Guadalajara</strong><small id="map-subtitle">Concentraciones de siniestros viales registrados</small></div></div>
+      <div class="mode-switch" role="group" aria-label="Visualización del mapa"><button class="mode active" data-mode="heatmap" aria-pressed="true" type="button">◉ &nbsp; Calor</button><button class="mode" data-mode="points" aria-pressed="false" type="button">⊙ &nbsp; Puntos</button></div>
+    </div>
+    <div class="map-wrap">
+      <div id="map"></div>
+      <div id="loading" class="loading"><div class="spinner"></div><span>Cargando cartografía…</span></div>
+      <div class="map-bottom-left"><div class="legend-label" id="legend-title">DENSIDAD RELATIVA DE SINIESTROS</div><div class="gradient"></div><div class="legend-minmax"><span>BAJA</span><span>ALTA</span></div></div>
+      <div class="map-bottom-right" id="floating-count">— eventos visibles</div>
+      <div class="map-tip" id="map-tip">Usa <strong>Puntos</strong> para seleccionar y consultar un siniestro.</div>
+    </div>
+   </section>
+   <section class="bottom-strip"><div><div class="strip-overline">SIGUIENTE ETAPA</div><strong>Motor espectral y papiroflexia de datos</strong><p>Construiremos un grafo territorial y compararemos su representación geográfica con una incrustación espectral 3D.</p></div><div class="strip-tag">FASE 02 · EN DESARROLLO <span>↗</span></div></section>
+   <footer>HOTSPOT / PROTOTIPO DE INVESTIGACIÓN <span>Los hotspots representan concentración histórica, no peligrosidad individual.</span></footer>
+  </main>
+ </div>
+ <script src="./data.js"></script>
+ <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+ <script src="./app.js"></script>
+</body>
+</html>

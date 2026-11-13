@@ -1,0 +1,64 @@
+
+# ====================================
+# HOTSPOT - Git Ignore
+# ====================================
+
+# Entornos virtuales Python
+.venv/
+venv/
+env/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Conda / Jupyter
+.ipynb_checkpoints/
+.conda/
+
+# Variables de entorno y credenciales
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*credentials*.json
+*service-account*.json
+
+# IDE
+.vscode/
+.idea/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs y temporales
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Datos originales voluminosos
+*.zip
+*.7z
+*.rar
+*.fits
+*.parquet
+
+# Informes de ejecución locales
+23_2_rendimiento.json
+23_2_rendimiento.md
+
+# Archivos generados de Python
+build/
+dist/
+*.egg-info/

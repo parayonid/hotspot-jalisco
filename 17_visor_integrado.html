@@ -1,0 +1,1032 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Hotspot | Etapa 17</title>
+
+  <!-- MapLibre -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"
+  >
+
+  <style>
+    /* ESTILOS GENERALES */
+
+    :root {
+      color-scheme: dark;
+      font-family: system-ui, -apple-system,
+                   Segoe UI, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #0b1020;
+      color: #edf0fa;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      min-height: 100vh;
+    }
+
+    /* PANEL LATERAL */
+
+    aside {
+      padding: 25px 20px;
+      background: #141b2e;
+      border-right: 1px solid #313d57;
+      z-index: 2;
+    }
+
+    .brand {
+      font-size: 27px;
+      font-weight: 800;
+      letter-spacing: .11em;
+      margin-bottom: 5px;
+    }
+
+    .sub {
+      font-size: 11px;
+      letter-spacing: .12em;
+      color: #a5b6d0;
+      margin-bottom: 27px;
+    }
+
+    h2 {
+      font-size: 15px;
+      margin: 23px 0 12px;
+    }
+
+    label {
+      font-size: 12px;
+      color: #b7c6db;
+      display: block;
+      margin: 17px 0 7px;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #3b4b68;
+      background: #202b43;
+      color: #fff;
+      font-size: 13px;
+    }
+
+    .toggle {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 13px;
+      margin-top: 18px;
+      cursor: pointer;
+    }
+
+    .toggle input {
+      width: 17px;
+      height: 17px;
+      accent-color: #a78bfa;
+    }
+
+    /* TARJETAS */
+
+    .box {
+      padding: 15px;
+      border-radius: 12px;
+      background: #202a40;
+      border: 1px solid #34425f;
+      margin-top: 18px;
+    }
+
+    .name {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .kv {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+      margin: 10px 0;
+    }
+
+    .kv span {
+      color: #becde0;
+    }
+
+    .kv strong {
+      text-align: right;
+    }
+
+    .note {
+      color: #b0bfd5;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    /* LEYENDA */
+
+    .legend {
+      display: flex;
+      gap: 5px;
+      margin: 10px 0;
+    }
+
+    .swatch {
+      flex: 1;
+      height: 11px;
+      border-radius: 2px;
+    }
+
+    /* MAPA */
+
+    main {
+      position: relative;
+      min-height: 100vh;
+    }
+
+    #map {
+      position: absolute;
+      inset: 0;
+    }
+
+    .status {
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      z-index: 5;
+      background: #131c30e8;
+      border: 1px solid #40506e;
+      border-radius: 9px;
+      padding: 11px 15px;
+      max-width: 420px;
+      font-size: 13px;
+    }
+
+    .maplibregl-popup-content {
+      background: #172239;
+      color: #fff;
+      border-radius: 10px;
+    }
+
+    .maplibregl-popup-close-button {
+      color: #fff;
+    }
+
+    @media (max-width: 750px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        padding: 16px;
+      }
+
+      main,
+      #map {
+        min-height: 64vh;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- INTERFAZ PRINCIPAL -->
+
+  <div class="app">
+
+    <aside>
+
+      <div class="brand">
+        HOTSPOT<span style="color:#a78bfa">.</span>
+      </div>
+
+      <div class="sub">
+        ETAPA 17 · VISOR Y PAPIROFLEXIA
+      </div>
+
+      <label for="indicador">
+        INDICADOR MUNICIPAL (2025)
+      </label>
+
+      <select id="indicador">
+        <option value="denue_mayo_2025">
+          Establecimientos DENUE
+        </option>
+        <option value="atus_2025">
+          Accidentes ATUS registrados
+        </option>
+        <option value="siniestralimap_asignados_2025">
+          Siniestralimap asignados
+        </option>
+      </select>
+
+      <label for="municipio">MUNICIPIO</label>
+
+      <select id="municipio">
+        <option value="">Todos los municipios</option>
+      </select>
+
+      <label class="toggle">
+        <input type="checkbox" id="mostrarSiniestros">
+        Mostrar puntos Siniestralimap
+      </label>
+
+      <label for="anio">AÑO DE LOS PUNTOS</label>
+
+      <select id="anio">
+        <option value="todos">
+          2015–2025 (todos)
+        </option>
+      </select>
+
+      <!-- El boton de papiroflexia se
+           insertara aqui desde JavaScript -->
+
+      <div class="box" id="ficha">
+        <div class="name">Jalisco</div>
+        <p class="note">
+          Selecciona un municipio para consultar
+          sus indicadores.
+        </p>
+      </div>
+
+      <h2>Escala de colores</h2>
+
+      <div class="legend" id="leyenda"></div>
+
+      <div class="note" id="rangos">
+        Los colores comparan conteos registrados,
+        no riesgo.
+      </div>
+
+      <h2>Interpretación</h2>
+
+      <p class="note">
+        ATUS no está disponible para todos
+        los municipios. Los territorios sin
+        datos se muestran en gris.
+      </p>
+
+      <p class="note">
+        Los ceros de Siniestralimap indican
+        cero eventos asignados en la fuente,
+        no necesariamente ausencia de accidentes.
+      </p>
+
+      <p class="note">
+        Los puntos son ubicaciones aproximadas.
+        Los datos de Seguridad están agregados
+        regionalmente, no por calle.
+      </p>
+
+    </aside>
+
+    <main>
+      <div id="map"></div>
+
+      <div id="status" class="status">
+        Cargando municipios...
+      </div>
+    </main>
+  </div>
+
+  <!-- BIBLIOTECA DEL MAPA -->
+
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+
+  <!-- LOGICA DEL VISOR TERRITORIAL -->
+
+  <script>
+    (async () => {
+
+      "use strict";
+
+      const $ = id => document.getElementById(id);
+
+      const fmt = new Intl.NumberFormat("es-MX");
+
+      const colors = [
+        "#e0d9ff",
+        "#b7a4ff",
+        "#8b6bde",
+        "#6345ac",
+        "#362064"
+      ];
+
+      const missingColor = "#657086";
+
+      const status = message => {
+        $("status").textContent = message;
+      };
+
+      const safe = value =>
+        String(value ?? "").replace(
+          /[&<>"']/g,
+          ch => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+          }[ch])
+        );
+
+      const numeric = value => {
+        if (
+          value === null ||
+          value === undefined ||
+          value === "" ||
+          !Number.isFinite(Number(value))
+        ) {
+          return "Sin dato";
+        }
+
+        return fmt.format(Number(value));
+      };
+
+      async function load(url) {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          throw new Error(
+            `${url}: HTTP ${response.status}`
+          );
+        }
+
+        return response.json();
+      }
+
+      try {
+
+        if (!window.maplibregl) {
+          throw new Error(
+            "No se pudo cargar MapLibre."
+          );
+        }
+
+        // CARGAR DATOS DE LA ETAPA 15
+
+        const [municipalData, polygons] =
+          await Promise.all([
+            load("./datos/municipios.json"),
+            load("./datos/municipios.geojson")
+          ]);
+
+        if (
+          municipalData.municipios?.length !== 125 ||
+          polygons.features?.length !== 125
+        ) {
+          throw new Error(
+            "Se esperaban 125 municipios."
+          );
+        }
+
+        const municipios = municipalData.municipios;
+
+        const byId = new Map(
+          municipios.map(m => [m.cvegeo, m])
+        );
+
+        if (byId.size !== 125) {
+          throw new Error(
+            "Existen claves duplicadas."
+          );
+        }
+
+        for (const f of polygons.features) {
+          if (!byId.has(f.properties.cvegeo)) {
+            throw new Error(
+              `Clave desconocida: ${f.properties.cvegeo}`
+            );
+          }
+        }
+
+        // LLENAR SELECTORES
+
+        const choices = [...municipios].sort(
+          (a, b) =>
+            a.municipio_cartografia.localeCompare(
+              b.municipio_cartografia,
+              "es"
+            )
+        );
+
+        choices.forEach(m => {
+          $("municipio").add(
+            new Option(
+              m.municipio_cartografia,
+              m.cvegeo
+            )
+          );
+        });
+
+        for (let year = 2025; year >= 2015; year--) {
+          $("anio").add(
+            new Option(String(year), String(year))
+          );
+        }
+
+        $("anio").value = "2025";
+
+        // CREAR MAPA
+
+        const map = new maplibregl.Map({
+          container: "map",
+          style:
+            "https://basemaps.cartocdn.com/gl/" +
+            "dark-matter-gl-style/style.json",
+          center: [-103.45, 20.75],
+          zoom: 7.3,
+          attributionControl: false
+        });
+
+        map.addControl(
+          new maplibregl.NavigationControl(),
+          "top-right"
+        );
+
+        map.addControl(
+          new maplibregl.AttributionControl({
+            compact: true
+          }),
+          "bottom-right"
+        );
+
+        let selectedId = "";
+        let eventsData = null;
+        let eventRequest = null;
+        let mapReady = false;
+
+        function metricValue(feature) {
+          return feature.properties[
+            $("indicador").value
+          ];
+        }
+
+        // QUINTILES APROXIMADOS
+
+        function quantiles(values) {
+          const sorted = values
+            .filter(Number.isFinite)
+            .sort((a, b) => a - b);
+
+          if (!sorted.length) {
+            return [0, 0, 0, 0];
+          }
+
+          return [1, 2, 3, 4].map(i => {
+            const index = Math.min(
+              sorted.length - 1,
+              Math.floor(
+                (sorted.length - 1) * i / 5
+              )
+            );
+
+            return sorted[index];
+          });
+        }
+
+        // COLOREAR MUNICIPIOS
+
+        function updateColors() {
+
+          const values = polygons.features
+            .map(f => metricValue(f))
+            .filter(v =>
+              v !== null &&
+              v !== undefined &&
+              Number.isFinite(Number(v))
+            )
+            .map(Number);
+
+          const cuts = quantiles(values);
+
+          for (const feature of polygons.features) {
+            const value = metricValue(feature);
+
+            if (
+              value === null ||
+              value === undefined ||
+              !Number.isFinite(Number(value))
+            ) {
+              feature.properties._color =
+                missingColor;
+            } else {
+              const number = Number(value);
+              const band = cuts.findIndex(
+                cut => number <= cut
+              );
+
+              feature.properties._color =
+                colors[
+                  band < 0
+                    ? colors.length - 1
+                    : band
+                ];
+            }
+          }
+
+          $("leyenda").replaceChildren(
+            ...colors.map(color => {
+              const div = document.createElement("div");
+              div.className = "swatch";
+              div.style.background = color;
+              return div;
+            })
+          );
+
+          $("rangos").textContent =
+            "Quintiles aproximados: " +
+            cuts.map(numeric).join(" · ") +
+            ". Gris: sin dato.";
+
+          if (mapReady) {
+            map.getSource("municipios")
+              .setData(polygons);
+          }
+
+          renderFicha();
+        }
+
+        // FICHA MUNICIPAL
+
+        function renderFicha() {
+
+          const m = byId.get(selectedId);
+
+          if (!m) {
+            $("ficha").innerHTML = `
+              <div class="name">Jalisco</div>
+              <p class="note">
+                Selecciona un municipio.
+                Los valores son conteos,
+                no tasas de riesgo.
+              </p>
+            `;
+            return;
+          }
+
+          const row = (label, value) => `
+            <div class="kv">
+              <span>${safe(label)}</span>
+              <strong>${safe(value)}</strong>
+            </div>
+          `;
+
+          $("ficha").innerHTML = `
+            <div class="name">
+              ${safe(m.municipio_cartografia)}
+            </div>
+
+            ${row(
+              "Región IIEG",
+              m.region_iieg ?? "Sin dato"
+            )}
+
+            ${row(
+              "DENUE mayo 2025",
+              numeric(
+                m.establecimientos_denue_mayo_2025
+              )
+            )}
+
+            ${row(
+              "ATUS 2025",
+              numeric(m.registros_atus_2025)
+            )}
+
+            ${row(
+              "Siniestralimap 2025",
+              numeric(
+                m.siniestros_registrados_2025
+              )
+            )}
+
+            ${row(
+              "Superficie km²",
+              m.area_km2 == null
+                ? "Sin dato"
+                : Number(m.area_km2).toFixed(1)
+            )}
+
+            <p class="note">
+              Registros asignados, no riesgo.
+            </p>
+          `;
+        }
+
+        // SELECCION DE MUNICIPIOS
+
+        function selectMunicipio(id, move = true) {
+
+          selectedId = id;
+          $("municipio").value = id;
+
+          renderFicha();
+
+          if (mapReady) {
+            map.setFilter(
+              "municipio-seleccionado",
+              [
+                "==",
+                ["get", "cvegeo"],
+                id || "__none__"
+              ]
+            );
+          }
+
+          const m = byId.get(id);
+
+          if (m && move) {
+            map.flyTo({
+              center: [
+                Number(m.punto_referencia_lon),
+                Number(m.punto_referencia_lat)
+              ],
+              zoom: 9.2,
+              duration: 800
+            });
+          } else if (!m && move) {
+            map.flyTo({
+              center: [-103.45, 20.75],
+              zoom: 7.3,
+              duration: 800
+            });
+          }
+        }
+
+        // FILTRAR SINIESTROS
+
+        function renderEvents() {
+
+          if (
+            !mapReady ||
+            !map.getSource("siniestros")
+          ) {
+            return;
+          }
+
+          const show =
+            $("mostrarSiniestros").checked;
+
+          const layers = [
+            "siniestros-clusters",
+            "siniestros-numero",
+            "siniestros-puntos"
+          ];
+
+          for (const layer of layers) {
+            map.setLayoutProperty(
+              layer,
+              "visibility",
+              show ? "visible" : "none"
+            );
+          }
+
+          if (!show || !eventsData) {
+            return;
+          }
+
+          const year = $("anio").value;
+
+          const list = year === "todos"
+            ? eventsData.features
+            : eventsData.features.filter(f =>
+                Number(f.properties.anio) ===
+                Number(year)
+              );
+
+          map.getSource("siniestros").setData({
+            type: "FeatureCollection",
+            features: list
+          });
+
+          status(
+            `${fmt.format(list.length)} ` +
+            "siniestros georreferenciados en " +
+            (year === "todos" ? "2015–2025" : year)
+          );
+        }
+
+        async function enableEvents() {
+
+          if (!$("mostrarSiniestros").checked) {
+            renderEvents();
+            return;
+          }
+
+          if (eventsData) {
+            renderEvents();
+            return;
+          }
+
+          status("Cargando Siniestralimap...");
+
+          if (!eventRequest) {
+            eventRequest = load(
+              "./datos/siniestros.geojson"
+            );
+          }
+
+          try {
+
+            const result = await eventRequest;
+
+            if (
+              result.type !== "FeatureCollection" ||
+              !Array.isArray(result.features)
+            ) {
+              throw new Error(
+                "GeoJSON de siniestros inválido."
+              );
+            }
+
+            eventsData = result;
+            renderEvents();
+
+          } catch (error) {
+            eventRequest = null;
+            $("mostrarSiniestros").checked = false;
+            status(error.message);
+          }
+        }
+
+        // CONTROLES DEL PANEL
+
+        $("indicador").addEventListener(
+          "change",
+          updateColors
+        );
+
+        $("municipio").addEventListener(
+          "change",
+          event => {
+            selectMunicipio(event.target.value);
+          }
+        );
+
+        $("mostrarSiniestros").addEventListener(
+          "change",
+          enableEvents
+        );
+
+        $("anio").addEventListener(
+          "change",
+          renderEvents
+        );
+
+        updateColors();
+
+        // AGREGAR CAPAS MAPLIBRE
+
+        map.on("load", () => {
+
+          map.addSource("municipios", {
+            type: "geojson",
+            data: polygons
+          });
+
+          map.addLayer({
+            id: "municipios-relleno",
+            type: "fill",
+            source: "municipios",
+            paint: {
+              "fill-color": ["get", "_color"],
+              "fill-opacity": 0.66
+            }
+          });
+
+          map.addLayer({
+            id: "municipios-bordes",
+            type: "line",
+            source: "municipios",
+            paint: {
+              "line-color": "#d7d9ee",
+              "line-opacity": 0.46,
+              "line-width": 0.65
+            }
+          });
+
+          map.addLayer({
+            id: "municipio-seleccionado",
+            type: "line",
+            source: "municipios",
+            filter: [
+              "==",
+              ["get", "cvegeo"],
+              "__none__"
+            ],
+            paint: {
+              "line-color": "#fff",
+              "line-width": 3
+            }
+          });
+
+          // FUENTE DE SINIESTROS
+
+          map.addSource("siniestros", {
+            type: "geojson",
+            data: {
+              type: "FeatureCollection",
+              features: []
+            },
+            cluster: true,
+            clusterRadius: 45,
+            clusterMaxZoom: 12
+          });
+
+          map.addLayer({
+            id: "siniestros-clusters",
+            type: "circle",
+            source: "siniestros",
+            filter: ["has", "point_count"],
+            layout: {
+              visibility: "none"
+            },
+            paint: {
+              "circle-color": "#ff9940",
+              "circle-radius": [
+                "step",
+                ["get", "point_count"],
+                13, 25, 19, 100, 25
+              ],
+              "circle-stroke-color": "#fff",
+              "circle-stroke-width": 1
+            }
+          });
+
+          map.addLayer({
+            id: "siniestros-numero",
+            type: "symbol",
+            source: "siniestros",
+            filter: ["has", "point_count"],
+            layout: {
+              visibility: "none",
+              "text-field": [
+                "get",
+                "point_count_abbreviated"
+              ],
+              "text-size": 11
+            },
+            paint: {
+              "text-color": "#111827"
+            }
+          });
+
+          map.addLayer({
+            id: "siniestros-puntos",
+            type: "circle",
+            source: "siniestros",
+            filter: [
+              "!",
+              ["has", "point_count"]
+            ],
+            layout: {
+              visibility: "none"
+            },
+            paint: {
+              "circle-color": "#ffd166",
+              "circle-radius": 4,
+              "circle-stroke-width": 0.7,
+              "circle-stroke-color": "#fff"
+            }
+          });
+
+          // CLIC EN MUNICIPIO
+
+          map.on(
+            "click",
+            "municipios-relleno",
+            e => {
+              const f = e.features?.[0];
+
+              if (f) {
+                selectMunicipio(
+                  String(f.properties.cvegeo),
+                  false
+                );
+              }
+            }
+          );
+
+          // CLIC EN GRUPO DE SINIESTROS
+
+          map.on(
+            "click",
+            "siniestros-clusters",
+            e => {
+              const f = e.features?.[0];
+              if (!f) return;
+
+              const source =
+                map.getSource("siniestros");
+
+              source.getClusterExpansionZoom(
+                f.properties.cluster_id
+              ).then(zoom => {
+                map.easeTo({
+                  center: f.geometry.coordinates,
+                  zoom
+                });
+              }).catch(console.error);
+            }
+          );
+
+          // CLIC EN SINIESTRO INDIVIDUAL
+
+          map.on(
+            "click",
+            "siniestros-puntos",
+            e => {
+              const f = e.features?.[0];
+              if (!f) return;
+
+              const p = f.properties;
+
+              const html = `
+                <b>
+                  ${safe(
+                    p.tipo_siniestro ||
+                    "Siniestro registrado"
+                  )}
+                </b>
+                <br>
+                Municipio:
+                ${safe(p.municipio || "Sin dato")}
+                <br>
+                Año: ${safe(p.anio)}
+                <br>
+                Heridos: ${numeric(p.personas_heridas)}
+                <br>
+                Fallecidos: ${numeric(p.personas_fallecidas)}
+              `;
+
+              new maplibregl.Popup({
+                maxWidth: "310px"
+              })
+                .setLngLat(f.geometry.coordinates)
+                .setHTML(html)
+                .addTo(map);
+            }
+          );
+
+          // CURSOR INTERACTIVO
+
+          for (const layer of [
+            "municipios-relleno",
+            "siniestros-clusters",
+            "siniestros-puntos"
+          ]) {
+
+            map.on("mouseenter", layer, () => {
+              map.getCanvas().style.cursor = "pointer";
+            });
+
+            map.on("mouseleave", layer, () => {
+              map.getCanvas().style.cursor = "";
+            });
+          }
+
+          mapReady = true;
+
+          status(
+            "125 municipios cargados. " +
+            "Puedes abrir la papiroflexia 3D."
+          );
+        });
+
+      } catch (error) {
+        status(
+          "Error al iniciar visor: " + error.message
+        );
+        console.error(error);
+      }
+
+    })();
+  </script>
+
+  <!-- SCRIPT 2: PAPIROFLEXIA -->
+
+  <script src="./17_papiroflexia.js"></script>
+
+
+   <script src="./18_panel_cientifico.js"></script>
+
+</body>
+</html>

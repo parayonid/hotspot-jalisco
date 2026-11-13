@@ -1,0 +1,368 @@
+{
+  "meta": {
+    "interpretacion": "Resultados exploratorios, no indicadores de riesgo validados ni evidencia causal.",
+    "precauciones": [
+      "Siniestralimap presenta cobertura territorial limitada.",
+      "ATUS tiene municipios sin registros disponibles.",
+      "El modelo temporal de homicidios presenta autocorrelacion residual."
+    ]
+  },
+  "diagnosticos": [
+    {
+      "analisis": "siniestralimap_panel_6_municipios",
+      "modelo": "Poisson_HC0",
+      "n": 66,
+      "aic": 1170.6181782217197,
+      "dispersion_pearson": 12.396810703253585,
+      "convergio": true
+    },
+    {
+      "analisis": "siniestralimap_panel_6_municipios",
+      "modelo": "Binomial_negativa_NB2",
+      "n": 66,
+      "aic": 682.9796446929286,
+      "dispersion_pearson": null,
+      "convergio": true
+    },
+    {
+      "analisis": "atus_denue_municipal_2025",
+      "modelo": "Poisson_HC0",
+      "n": 80,
+      "aic": 10065.719656468322,
+      "dispersion_pearson": 136.35506076224743,
+      "convergio": true
+    },
+    {
+      "analisis": "atus_denue_municipal_2025",
+      "modelo": "Binomial_negativa_NB2",
+      "n": 80,
+      "aic": 875.3653907962916,
+      "dispersion_pearson": null,
+      "convergio": true
+    },
+    {
+      "analisis": "homicidio_doloso_estatal_mensual",
+      "modelo": "Poisson_HC0",
+      "n": 107,
+      "aic": 1154.4119817520282,
+      "dispersion_pearson": 4.080933591658439,
+      "convergio": true
+    },
+    {
+      "analisis": "homicidio_doloso_estatal_mensual",
+      "modelo": "Binomial_negativa_NB2",
+      "n": 107,
+      "aic": 985.1987394917409,
+      "dispersion_pearson": null,
+      "convergio": true
+    }
+  ],
+  "coeficientes": [
+    {
+      "analisis": "siniestralimap_panel_6_municipios",
+      "modelo": "Poisson_HC0",
+      "variable": "Intercept",
+      "beta": 2.945917003622222,
+      "p_exploratorio": 1.00566481595275e-52,
+      "ic95_inf": 2.568097715509776,
+      "ic95_sup": 3.323736291734669
+    },
+    {
+      "analisis": "siniestralimap_panel_6_municipios",
+      "modelo": "Poisson_HC0",
+      "variable": "C(municipio_panel)[T.Guadalajara]",
+      "beta": 4.242245895129563,
+      "p_exploratorio": 2.07962703371028e-103,
+      "ic95_inf": 3.857187730446044,
+      "ic95_sup": 4.627304059813082
+    },
+    {
+      "analisis": "siniestralimap_panel_6_municipios",
+      "modelo": "Poisson_HC0",
+      "variable": "C(municipio_panel)[T.San Pedro Tlaquepaque]",
+      "beta": 2.697974549113436,
+      "p_exploratorio": 5.10319747735725e-43,
+      "ic95_inf": 2.313393541018915,
+      "ic95_sup": 3.082555557207957
+    },
+    {
+      "analisis": "siniestralimap_panel_6_municipios",
+      "modelo": "Poisson_HC0",
+      "variable": "C(municipio_panel)[T.Tlajomulco de Zúñiga]",
+      "beta": 2.077560073580152,
+      "p_exploratorio": 1.75886072939997e-21,
+      "ic95_inf": 1.649762540646039,
+      "ic95_sup": 2.505357606514265
+    },
+    {
+      "analisis": "siniestralimap_panel_6_municipios",
+      "modelo": "Poisson_HC0",
+      "variable": "C(municipio_panel)[T.Tonalá]",
+      "beta": 2.111806826181892,
+      "p_exploratorio": 4.75362543124487e-27,
+      "ic95_inf": 1.727503802689446,
+      "ic95_sup": 2.496109849674338
+    },
+    {
+      "analisis": "siniestralimap_panel_6_municipios",
+      "modelo": "Poisson_HC0",
+      "variable": "C(municipio_panel)[T.Zapopan]",
+      "beta": 3.636596354637143,
+      "p_exploratorio": 3.94624731728924e-72,
+      "ic95_inf": 3.239755851941378,
+      "ic95_sup": 4.033436857332909
+    },
+    {
+      "analisis": "siniestralimap_panel_6_municipios",
+      "modelo": "Poisson_HC0",
+      "variable": "t_anios",
+      "beta": -0.100738084773681,
+      "p_exploratorio": 2.81852312308225e-34,
+      "ic95_inf": -0.11691138025349,
+      "ic95_sup": -0.084564789293872
+    },
+    {
+      "analisis": "siniestralimap_panel_6_municipios",
+      "modelo": "Binomial_negativa_NB2",
+      "variable": "Intercept",
+      "beta": 2.96689975483545,
+      "p_exploratorio": 1.35615751625273e-134,
+      "ic95_inf": 2.731382434677243,
+      "ic95_sup": 3.202417074993657
+    },
+    {
+      "analisis": "siniestralimap_panel_6_municipios",
+      "modelo": "Binomial_negativa_NB2",
+      "variable": "C(municipio_panel)[T.Guadalajara]",
+      "beta": 4.195978435537469,
+      "p_exploratorio": 2.18602721325691e-226,
+      "ic95_inf": 3.939954178829682,
+      "ic95_sup": 4.452002692245256
+    },
+    {
+      "analisis": "siniestralimap_panel_6_municipios",
+      "modelo": "Binomial_negativa_NB2",
+      "variable": "C(municipio_panel)[T.San Pedro Tlaquepaque]",
+      "beta": 2.657258868276269,
+      "p_exploratorio": 8.95115583625552e-90,
+      "ic95_inf": 2.398024214020315,
+      "ic95_sup": 2.916493522532224
+    },
+    {
+      "analisis": "siniestralimap_panel_6_municipios",
+      "modelo": "Binomial_negativa_NB2",
+      "variable": "C(municipio_panel)[T.Tlajomulco de Zúñiga]",
+      "beta": 2.007775554229242,
+      "p_exploratorio": 1.09812911363616e-50,
+      "ic95_inf": 1.744962434785553,
+      "ic95_sup": 2.270588673672931
+    },
+    {
+      "analisis": "siniestralimap_panel_6_municipios",
+      "modelo": "Binomial_negativa_NB2",
+      "variable": "C(municipio_panel)[T.Tonalá]",
+      "beta": 2.051687700145116,
+      "p_exploratorio": 5.70398209371892e-53,
+      "ic95_inf": 1.789188889726491,
+      "ic95_sup": 2.31418651056374
+    },
+    {
+      "analisis": "siniestralimap_panel_6_municipios",
+      "modelo": "Binomial_negativa_NB2",
+      "variable": "C(municipio_panel)[T.Zapopan]",
+      "beta": 3.614070071251684,
+      "p_exploratorio": 1.88914304963501e-167,
+      "ic95_inf": 3.35724514467452,
+      "ic95_sup": 3.870894997828847
+    },
+    {
+      "analisis": "siniestralimap_panel_6_municipios",
+      "modelo": "Binomial_negativa_NB2",
+      "variable": "t_anios",
+      "beta": -0.096483652688718,
+      "p_exploratorio": 9.05079761236161e-24,
+      "ic95_inf": -0.115297269219644,
+      "ic95_sup": -0.077670036157792
+    },
+    {
+      "analisis": "siniestralimap_panel_6_municipios",
+      "modelo": "Binomial_negativa_NB2",
+      "variable": "alpha",
+      "beta": 0.050094684281575,
+      "p_exploratorio": 3.0377374108e-05,
+      "ic95_inf": 0.026552907037564,
+      "ic95_sup": 0.073636461525586
+    },
+    {
+      "analisis": "atus_denue_municipal_2025",
+      "modelo": "Poisson_HC0",
+      "variable": "Intercept",
+      "beta": -2.085987003520506,
+      "p_exploratorio": 6.67218242e-07,
+      "ic95_inf": -2.908503716064329,
+      "ic95_sup": -1.263470290976683
+    },
+    {
+      "analisis": "atus_denue_municipal_2025",
+      "modelo": "Poisson_HC0",
+      "variable": "log1p_denue",
+      "beta": 0.898297924630167,
+      "p_exploratorio": 9.93566820424539e-108,
+      "ic95_inf": 0.818444239003714,
+      "ic95_sup": 0.97815161025662
+    },
+    {
+      "analisis": "atus_denue_municipal_2025",
+      "modelo": "Binomial_negativa_NB2",
+      "variable": "Intercept",
+      "beta": -1.891168569444322,
+      "p_exploratorio": 0.002382116822468,
+      "ic95_inf": -3.11128423717471,
+      "ic95_sup": -0.671052901713935
+    },
+    {
+      "analisis": "atus_denue_municipal_2025",
+      "modelo": "Binomial_negativa_NB2",
+      "variable": "log1p_denue",
+      "beta": 0.873192721156343,
+      "p_exploratorio": 2.11492473785649e-25,
+      "ic95_inf": 0.708871670325481,
+      "ic95_sup": 1.037513771987205
+    },
+    {
+      "analisis": "atus_denue_municipal_2025",
+      "modelo": "Binomial_negativa_NB2",
+      "variable": "alpha",
+      "beta": 1.21648351186529,
+      "p_exploratorio": 3.161e-12,
+      "ic95_inf": 0.874426436371549,
+      "ic95_sup": 1.558540587359031
+    },
+    {
+      "analisis": "homicidio_doloso_estatal_mensual",
+      "modelo": "Poisson_HC0",
+      "variable": "Intercept",
+      "beta": 5.236317409071549,
+      "p_exploratorio": 0.0,
+      "ic95_inf": 5.169226924088115,
+      "ic95_sup": 5.303407894054982
+    },
+    {
+      "analisis": "homicidio_doloso_estatal_mensual",
+      "modelo": "Poisson_HC0",
+      "variable": "t_meses",
+      "beta": -0.007618085431368,
+      "p_exploratorio": 3.50839166459472e-31,
+      "ic95_inf": -0.008903730424905,
+      "ic95_sup": -0.006332440437832
+    },
+    {
+      "analisis": "homicidio_doloso_estatal_mensual",
+      "modelo": "Poisson_HC0",
+      "variable": "sin_anual",
+      "beta": -0.002527486865858,
+      "p_exploratorio": 0.909126587582321,
+      "ic95_inf": -0.045928317710047,
+      "ic95_sup": 0.040873343978331
+    },
+    {
+      "analisis": "homicidio_doloso_estatal_mensual",
+      "modelo": "Poisson_HC0",
+      "variable": "cos_anual",
+      "beta": -0.026725447570611,
+      "p_exploratorio": 0.26889230821121,
+      "ic95_inf": -0.074102534289401,
+      "ic95_sup": 0.020651639148179
+    },
+    {
+      "analisis": "homicidio_doloso_estatal_mensual",
+      "modelo": "Binomial_negativa_NB2",
+      "variable": "Intercept",
+      "beta": 5.266953834352469,
+      "p_exploratorio": 0.0,
+      "ic95_inf": 5.197324764038616,
+      "ic95_sup": 5.336582904666321
+    },
+    {
+      "analisis": "homicidio_doloso_estatal_mensual",
+      "modelo": "Binomial_negativa_NB2",
+      "variable": "t_meses",
+      "beta": -0.008238380066575,
+      "p_exploratorio": 8.63591775409631e-43,
+      "ic95_inf": -0.009415978663809,
+      "ic95_sup": -0.007060781469341
+    },
+    {
+      "analisis": "homicidio_doloso_estatal_mensual",
+      "modelo": "Binomial_negativa_NB2",
+      "variable": "sin_anual",
+      "beta": 4.9125800608e-05,
+      "p_exploratorio": 0.998441671054204,
+      "ic95_inf": -0.04924990483694,
+      "ic95_sup": 0.049348156438156
+    },
+    {
+      "analisis": "homicidio_doloso_estatal_mensual",
+      "modelo": "Binomial_negativa_NB2",
+      "variable": "cos_anual",
+      "beta": -0.025909011682443,
+      "p_exploratorio": 0.299608364045119,
+      "ic95_inf": -0.074864976241871,
+      "ic95_sup": 0.023046952876985
+    },
+    {
+      "analisis": "homicidio_doloso_estatal_mensual",
+      "modelo": "Binomial_negativa_NB2",
+      "variable": "alpha",
+      "beta": 0.025400564292853,
+      "p_exploratorio": 6.5083486e-08,
+      "ic95_inf": 0.016188504055148,
+      "ic95_sup": 0.034612624530558
+    }
+  ],
+  "moran_atus": [
+    {
+      "analisis": "atus_denue_municipal_2025",
+      "modelo": "Binomial_negativa_NB2",
+      "n_municipios_con_atus": 80,
+      "n_utilizados_moran": 78,
+      "n_aislados": 2,
+      "aristas_subgrafo": 149,
+      "alpha_nb2": 1.21648351186529,
+      "I_moran": 0.056005935703811,
+      "media_permutaciones": -0.010827533870497,
+      "p_agrupamiento_positivo": 0.1755,
+      "p_bilateral_exploratorio": 0.356,
+      "n_permutaciones": 1999,
+      "semilla": 20261111
+    }
+  ],
+  "analisis_espectral": [
+    {
+      "n_municipios": 125,
+      "n_aristas": 304,
+      "componentes_conexas_espectrales": 1,
+      "lambda_2_conectividad_algebraica": 0.056982121491667,
+      "lambda_3": 0.06150393145829,
+      "lambda_4": 0.186216628378158,
+      "error_filas_laplaciano": 0.0,
+      "error_ortogonalidad": 2e-15,
+      "error_autopares": 7e-15,
+      "energia_denue": 359.57468159586404,
+      "energia_espectral_reconstruida": 359.57468159586415,
+      "tau_difusion_ejemplo": 0.75
+    }
+  ],
+  "energia_denue": [
+    {
+      "municipios": 125,
+      "aristas": 304,
+      "energia_observada": 359.5746815958641,
+      "media_energia_aleatoria": 730.8970499080468,
+      "p_suavidad_unilateral": 0.0005,
+      "p_contraste_unilateral": 1.0,
+      "permutaciones": 1999,
+      "semilla": 20261111
+    }
+  ]
+}

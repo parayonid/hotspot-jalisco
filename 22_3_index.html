@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  >
+
+  <meta
+    name="description"
+    content="Hotspot: observatorio territorial de Jalisco"
+  >
+
+  <title>HOTSPOT · Observatorio</title>
+
+  <link
+    rel="stylesheet"
+    href="./app/22_3.css"
+  >
+
+  <script
+    src="./app/22_3.js"
+    defer
+  ></script>
+</head>
+
+<body>
+
+  <div class="shell">
+
+    <header class="topbar">
+
+      <div class="brand">
+        <strong>HOTSPOT<span>.</span></strong>
+        <small>OBSERVATORIO TERRITORIAL</small>
+      </div>
+
+      <nav
+        class="tabs"
+        aria-label="Navegación principal"
+      >
+
+        <button
+          type="button"
+          data-mode="territorio"
+        >
+          Territorio
+        </button>
+
+        <button
+          type="button"
+          data-mode="red"
+        >
+          Red urbana
+        </button>
+
+        <button
+          type="button"
+          data-mode="municipal3d"
+        >
+          Grafo municipal 3D
+        </button>
+
+        <button
+          type="button"
+          data-mode="urbano3d"
+        >
+          Grafo de siniestros 3D
+        </button>
+
+        <button
+          type="button"
+          data-mode="ciencia"
+        >
+          Panel científico
+        </button>
+
+      </nav>
+
+      <div
+        class="connection"
+        id="appStatus"
+        role="status"
+        aria-live="polite"
+      >
+        Iniciando...
+      </div>
+
+    </header>
+
+    <main class="workspace">
+
+      <iframe
+        id="module"
+        title="Vista de Hotspot"
+        loading="eager"
+      ></iframe>
+
+      <div
+        class="loading"
+        id="loading"
+        role="status"
+      >
+
+        <div class="loading-card">
+
+          <div
+            class="loading-icon"
+            aria-hidden="true"
+          >
+            ◈
+          </div>
+
+          <strong id="loadingTitle">
+            Preparando módulo...
+          </strong>
+
+          <p id="loadingDetail">
+            Cargando recursos locales
+          </p>
+
+          <button
+            id="retry"
+            type="button"
+            hidden
+          >
+            Reintentar
+          </button>
+
+        </div>
+      </div>
+
+    </main>
+
+    <footer class="footer">
+
+      <span>
+        ATUS · DENUE · Siniestralimap ·
+        Seguridad regional
+      </span>
+
+      <span>
+        Conteos observados ≠ riesgo vial ·
+        Cobertura y ubicaciones limitadas
+      </span>
+
+    </footer>
+
+  </div>
+
+</body>
+</html>

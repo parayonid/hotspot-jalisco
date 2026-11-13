@@ -1,0 +1,1127 @@
+
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <title>
+    Hotspot · Red espectral de siniestros · Etapa 21.4
+  </title>
+
+  <link
+    href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"
+    rel="stylesheet"
+  >
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #0c1223;
+      color: #e8ecfa;
+      font: 14px system-ui, sans-serif;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      height: 100dvh;
+    }
+
+    aside {
+      background: #141c2e;
+      border-right: 1px solid #354463;
+      padding: 22px;
+      overflow-y: auto;
+    }
+
+    h1 {
+      margin: 0;
+      letter-spacing: .08em;
+      font-size: 25px;
+    }
+
+    h1 span {
+      color: #ab92ff;
+    }
+
+    .sub {
+      font-size: 11px;
+      letter-spacing: .12em;
+      color: #a4b7d0;
+      margin: 6px 0 24px;
+    }
+
+    h2 {
+      font-size: 15px;
+      margin: 20px 0 8px;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0;
+      font-size: 13px;
+      color: #c8d3e7;
+    }
+
+    input[type="checkbox"] {
+      accent-color: #a78bfa;
+      margin-right: 6px;
+    }
+
+    button {
+      cursor: pointer;
+      border-radius: 9px;
+      border: 1px solid #5a6b90;
+      background: #263450;
+      color: white;
+      padding: 10px 13px;
+      font: inherit;
+    }
+
+    button:hover {
+      background: #344463;
+    }
+
+    button.primary {
+      width: 100%;
+      background: #4a3379;
+      border-color: #9a75f2;
+      font-weight: 700;
+      margin-top: 16px;
+    }
+
+    .card {
+      border: 1px solid #374660;
+      background: #202b41;
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 14px;
+      line-height: 1.6;
+    }
+
+    .metric {
+      font-size: 24px;
+      font-weight: 750;
+      color: #e4c17e;
+    }
+
+    .hint {
+      color: #b3bfd5;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .legend {
+      height: 11px;
+      background: linear-gradient(
+        90deg,
+        #5479b7,
+        #9570c7,
+        #f7ba65,
+        #f97316
+      );
+      border-radius: 8px;
+      margin: 10px 0 6px;
+    }
+
+    main {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    #map {
+      position: absolute;
+      inset: 0;
+    }
+
+    .banner {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 75px;
+      z-index: 2;
+      max-width: 660px;
+      background: #131e32ec;
+      border: 1px solid #516081;
+      border-radius: 10px;
+      padding: 10px 13px;
+      font-size: 12px;
+    }
+
+    .maplibregl-popup-content {
+      background: #17243b;
+      color: #fff;
+      border-radius: 9px;
+    }
+
+    .maplibregl-popup-close-button {
+      color: white;
+    }
+
+    #spectralPanel {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      background: #0b1120;
+    }
+
+    #spectralPanel[hidden] {
+      display: none;
+    }
+
+    .bar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .bar h2 {
+      margin: 0;
+      margin-right: auto;
+      font-size: 16px;
+    }
+
+    #tRange {
+      flex: 1;
+      min-width: 110px;
+      accent-color: #a78bfa;
+    }
+
+    #threeHost {
+      flex: 1;
+      min-height: 280px;
+      margin-top: 12px;
+      border: 1px solid #334362;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    #threeHost canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .smallstatus {
+      padding: 8px 0;
+      font-size: 12px;
+      color: #b9c7e3;
+    }
+
+    @media (max-width: 750px) {
+      .app {
+        display: block;
+        height: auto;
+      }
+
+      aside {
+        max-height: none;
+      }
+
+      main {
+        height: 70vh;
+        min-height: 460px;
+      }
+
+      #spectralPanel {
+        padding: 10px;
+      }
+    }
+  </style>
+
+  <!-- Three.js -->
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+
+<body>
+
+  <div class="app">
+
+    <!-- ==================================
+         PANEL LATERAL
+         ================================== -->
+
+    <aside>
+
+      <h1>
+        HOTSPOT<span>.</span>
+      </h1>
+
+      <div class="sub">
+        ETAPA 21.4 · RED DE SINIESTROS
+      </div>
+
+      <div class="card" id="summary">
+        Cargando los datos de 2025...
+      </div>
+
+      <h2>Red territorial 2025</h2>
+
+      <label>
+        <input
+          type="checkbox"
+          id="showEdges"
+          checked
+        >
+        Mostrar las 1,034 aristas
+      </label>
+
+      <label>
+        <input
+          type="checkbox"
+          id="onlyFocus"
+        >
+        Mostrar solo las 44 zonas destacadas
+        en el mapa
+      </label>
+
+      <button
+        class="primary"
+        id="open3d"
+        type="button"
+      >
+        ◈ Abrir papiroflexia urbana 3D
+      </button>
+
+      <div class="card" id="selected">
+        Haz clic en una celda para consultar
+        sus registros.
+      </div>
+
+      <h2>Eventos por celda</h2>
+
+      <div class="legend"></div>
+
+      <p class="hint">
+        Los colores muestran conteos de
+        siniestros georreferenciados de 2025,
+        no probabilidades de riesgo.
+
+        Los bordes ámbar identifican
+        las 44 celdas destacadas
+        descriptivamente.
+      </p>
+
+      <p class="hint">
+        Las líneas indican vecindad entre
+        celdas de 1 km², por lado o diagonal.
+
+        No representan calles, trayectos
+        ni relaciones causales.
+      </p>
+
+      <p class="hint">
+        La fuente tiene cobertura limitada
+        y localizaciones aproximadas.
+      </p>
+
+      <p class="hint">
+        En 3D, 347 nodos de la componente
+        mayor reciben la transformación
+        espectral. Las otras 100 celdas
+        permanecen en su posición territorial.
+      </p>
+
+    </aside>
+
+    <!-- ==================================
+         MAPA
+         ================================== -->
+
+    <main>
+
+      <div id="map"></div>
+
+      <div class="banner" id="status">
+        Preparando capas territoriales...
+      </div>
+
+      <!-- ================================
+           PAPIROFLEXIA THREE.JS
+           ================================ -->
+
+      <section
+        id="spectralPanel"
+        hidden
+        aria-label="Papiroflexia espectral urbana"
+      >
+
+        <div class="bar">
+
+          <h2>
+            Papiroflexia de siniestros · GPU
+          </h2>
+
+          <button
+            id="close3d"
+            type="button"
+          >
+            ← Volver al mapa
+          </button>
+
+        </div>
+
+        <div
+          class="bar"
+          style="margin-top:10px"
+        >
+
+          <button
+            id="play3d"
+            type="button"
+          >
+            ▶ Animar
+          </button>
+
+          <label for="tRange">
+            Transformación
+            <strong id="tValue">0.00</strong>
+          </label>
+
+          <input
+            id="tRange"
+            type="range"
+            min="0"
+            max="1"
+            step="0.005"
+            value="0"
+          >
+
+        </div>
+
+        <div
+          class="smallstatus"
+          id="threeStatus"
+        >
+          Preparando WebGL...
+        </div>
+
+        <div id="threeHost"></div>
+
+        <div
+          class="smallstatus"
+          id="threeSelected"
+        >
+          Selecciona un nodo para ver
+          sus registros y resaltarlo
+          en el mapa.
+        </div>
+
+        <p
+          class="hint"
+          style="margin:3px 0"
+        >
+          Arrastra el mouse para rotar y
+          usa la rueda para acercarte.
+
+          El plano conserva las posiciones
+          iniciales de las celdas.
+
+          La elevación es una representación
+          matemática, no riesgo vial.
+        </p>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ====================================
+       MAPLIBRE
+       ==================================== -->
+
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+
+  <!-- ====================================
+       DATOS Y CONTROLES DEL MAPA
+       ==================================== -->
+
+  <script>
+    (() => {
+
+      "use strict";
+
+      const $ = id =>
+        document.getElementById(id);
+
+      const fmt = n =>
+        Number(n).toLocaleString("es-MX");
+
+      const escapeHTML = str =>
+        String(str ?? "").replace(
+          /[&<>"']/g,
+          ch => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+          }[ch])
+        );
+
+      let map;
+      let zonas;
+      let red;
+
+      let selectedId = "";
+      let ready = false;
+
+      // ==================================
+      // 1. CARGAR ARCHIVOS
+      // ==================================
+
+      async function fetchJSON(file) {
+
+        const response = await fetch(
+          "./datos/" + file
+        );
+
+        if (!response.ok) {
+
+          throw new Error(
+            `${file}: HTTP ${response.status}`
+          );
+        }
+
+        return response.json();
+      }
+
+      // ==================================
+      // 2. INFORMACIÓN DE LA CELDA
+      // ==================================
+
+      function info(id) {
+
+        const node = red.nodos.find(
+          n => n.id === id
+        );
+
+        if (!node) {
+          return;
+        }
+
+        $("selected").innerHTML = `
+
+          <b>${escapeHTML(id)}</b>
+
+          <br>
+
+          <span class="metric">
+            ${fmt(node.conteo_2025)}
+          </span>
+
+          siniestros registrados
+
+          <br>
+
+          ${
+            node.alta_concentracion_2025
+              ? "Zona destacada · "
+              : ""
+          }
+
+          Componente ${fmt(node.componente)}
+
+          · Grado ${fmt(node.grado)}
+
+          <br>
+
+          <span class="hint">
+            ${
+              node.en_componente_mayor
+                ? "Con embedding espectral"
+                : "Sin embedding; componente distinta"
+            }
+          </span>
+        `;
+      }
+
+      // ==================================
+      // 3. SELECCIÓN COMPARTIDA
+      // ==================================
+
+      function select(id, move = false) {
+
+        if (
+          !red ||
+          !red.nodos.some(n => n.id === id)
+        ) {
+          return;
+        }
+
+        selectedId = id;
+
+        info(id);
+
+        if (ready) {
+
+          map.setFilter(
+            "selected",
+            [
+              "==",
+              ["get", "id_celda"],
+              id
+            ]
+          );
+        }
+
+        if (move && ready) {
+
+          const n = red.nodos.find(
+            n => n.id === id
+          );
+
+          map.flyTo({
+
+            center: n.centro_lonlat,
+
+            zoom: Math.max(
+              11,
+              map.getZoom()
+            ),
+
+            duration: 500
+          });
+        }
+
+        document.dispatchEvent(
+          new CustomEvent(
+            "hotspot:celda-seleccionada",
+            {
+              detail: { id }
+            }
+          )
+        );
+      }
+
+      // Selección proveniente de Three.js.
+
+      document.addEventListener(
+        "hotspot:seleccionar-desde-3d",
+        event => {
+
+          select(
+            event.detail.id,
+            false
+          );
+        }
+      );
+
+      // ==================================
+      // 4. FILTROS DEL MAPA
+      // ==================================
+
+      function refresh() {
+
+        if (!ready) {
+          return;
+        }
+
+        map.setLayoutProperty(
+
+          "edges",
+
+          "visibility",
+
+          $("showEdges").checked
+            ? "visible"
+            : "none"
+        );
+
+        const filter =
+          $("onlyFocus").checked
+
+            ? [
+                "==",
+                [
+                  "get",
+                  "alta_concentracion_2025"
+                ],
+                true
+              ]
+
+            : [
+                ">",
+                ["get", "n_2025"],
+                0
+              ];
+
+        map.setFilter(
+          "zones",
+          filter
+        );
+
+        map.setFilter(
+          "zoneBorders",
+          filter
+        );
+      }
+
+      $("showEdges").addEventListener(
+        "change",
+        refresh
+      );
+
+      $("onlyFocus").addEventListener(
+        "change",
+        refresh
+      );
+
+      // ==================================
+      // 5. INICIALIZAR EL VISOR
+      // ==================================
+
+      (async () => {
+
+        try {
+
+          [zonas, red] = await Promise.all([
+
+            fetchJSON(
+              "21_zonas_siniestros.geojson"
+            ),
+
+            fetchJSON(
+              "21_embedding_siniestros_2025.json"
+            )
+
+          ]);
+
+          // Verificar datos científicos.
+
+          if (
+            zonas.features?.length !== 764 ||
+            red.nodos?.length !== 447 ||
+            red.aristas?.length !== 1034
+          ) {
+
+            throw new Error(
+              "Los datos no coinciden con " +
+              "las etapas 21.1–21.3."
+            );
+          }
+
+          const nodeById = new Map(
+
+            red.nodos.map(
+              node => [
+                node.id,
+                node
+              ]
+            )
+          );
+
+          // ==================================
+          // 6. GENERAR CAPA DE ARISTAS
+          // ==================================
+
+          const edgeFeatures = red.aristas.map(
+            (edge, i) => {
+
+              const a = nodeById.get(
+                edge.source
+              );
+
+              const b = nodeById.get(
+                edge.target
+              );
+
+              if (!a || !b) {
+
+                throw new Error(
+                  `Arista con ID desconocido: ${i}`
+                );
+              }
+
+              return {
+
+                type: "Feature",
+
+                properties: {
+
+                  en_mayor:
+                    edge.en_componente_mayor
+                },
+
+                geometry: {
+
+                  type: "LineString",
+
+                  coordinates: [
+
+                    a.centro_lonlat,
+
+                    b.centro_lonlat
+                  ]
+                }
+              };
+            }
+          );
+
+          const edges = {
+
+            type: "FeatureCollection",
+
+            features: edgeFeatures
+          };
+
+          // ==================================
+          // 7. ACTUALIZAR RESUMEN
+          // ==================================
+
+          const total = red.nodos.reduce(
+
+            (sum, n) =>
+              sum + n.conteo_2025,
+
+            0
+          );
+
+          $("summary").innerHTML = `
+
+            <span class="metric">
+              ${fmt(red.nodos.length)}
+            </span>
+
+            celdas activas 2025
+
+            <br>
+
+            <b>
+              ${fmt(red.aristas.length)}
+            </b>
+
+            aristas ·
+
+            <b>
+              ${fmt(red.metadatos.componentes)}
+            </b>
+
+            componentes
+
+            <br>
+
+            <b>
+              ${fmt(
+                red.metadatos.nodos_con_embedding
+              )}
+            </b>
+
+            nodos con embedding
+
+            <br>
+
+            <b>
+              ${fmt(total)}
+            </b>
+
+            siniestros georreferenciados
+          `;
+
+          // ==================================
+          // 8. INICIAR MAPLIBRE
+          // ==================================
+
+          if (!window.maplibregl) {
+
+            throw new Error(
+              "MapLibre no se pudo cargar."
+            );
+          }
+
+          map = new maplibregl.Map({
+
+            container: "map",
+
+            style:
+              "https://basemaps.cartocdn.com/gl/" +
+              "dark-matter-gl-style/style.json",
+
+            center: [
+              -103.35,
+              20.67
+            ],
+
+            zoom: 10
+          });
+
+          map.addControl(
+
+            new maplibregl.NavigationControl(),
+
+            "top-right"
+          );
+
+          // ==================================
+          // 9. CREAR CAPAS
+          // ==================================
+
+          map.on("load", () => {
+
+            map.addSource(
+              "zones",
+              {
+                type: "geojson",
+                data: zonas
+              }
+            );
+
+            map.addSource(
+              "edges",
+              {
+                type: "geojson",
+                data: edges
+              }
+            );
+
+            // Celdas coloreadas por registros.
+
+            map.addLayer({
+
+              id: "zones",
+
+              type: "fill",
+
+              source: "zones",
+
+              filter: [
+                ">",
+                ["get", "n_2025"],
+                0
+              ],
+
+              paint: {
+
+                "fill-color": [
+
+                  "interpolate",
+
+                  ["linear"],
+
+                  ["get", "n_2025"],
+
+                  1, "#5479b7",
+
+                  3, "#9570c7",
+
+                  7, "#f7ba65",
+
+                  14, "#f97316"
+                ],
+
+                "fill-opacity": 0.66
+              }
+            });
+
+            // Bordes de las celdas.
+
+            map.addLayer({
+
+              id: "zoneBorders",
+
+              type: "line",
+
+              source: "zones",
+
+              filter: [
+                ">",
+                ["get", "n_2025"],
+                0
+              ],
+
+              paint: {
+
+                "line-color": "#d8e4ff",
+
+                "line-width": 0.55,
+
+                "line-opacity": 0.42
+              }
+            });
+
+            // Red espacial.
+
+            map.addLayer({
+
+              id: "edges",
+
+              type: "line",
+
+              source: "edges",
+
+              paint: {
+
+                "line-color": [
+
+                  "case",
+
+                  [
+                    "get",
+                    "en_mayor"
+                  ],
+
+                  "#79dbbd",
+
+                  "#7b859b"
+                ],
+
+                "line-width": 1.4,
+
+                "line-opacity": 0.60
+              }
+            });
+
+            // Zonas destacadas.
+
+            map.addLayer({
+
+              id: "focus",
+
+              type: "line",
+
+              source: "zones",
+
+              filter: [
+                "==",
+                [
+                  "get",
+                  "alta_concentracion_2025"
+                ],
+                true
+              ],
+
+              paint: {
+
+                "line-color": "#ffd28c",
+
+                "line-width": 2.2
+              }
+            });
+
+            // Celda seleccionada.
+
+            map.addLayer({
+
+              id: "selected",
+
+              type: "line",
+
+              source: "zones",
+
+              filter: [
+                "==",
+                ["get", "id_celda"],
+                "__none__"
+              ],
+
+              paint: {
+
+                "line-color": "#ffffff",
+
+                "line-width": 3.2
+              }
+            });
+
+            // ==================================
+            // 10. INTERACCIÓN
+            // ==================================
+
+            map.on(
+              "click",
+              "zones",
+              event => {
+
+                const properties =
+                  event.features?.[0]?.properties;
+
+                if (
+                  properties?.id_celda
+                ) {
+
+                  select(
+                    String(
+                      properties.id_celda
+                    )
+                  );
+                }
+              }
+            );
+
+            map.on(
+              "mouseenter",
+              "zones",
+              () => {
+
+                map.getCanvas()
+                  .style.cursor = "pointer";
+              }
+            );
+
+            map.on(
+              "mouseleave",
+              "zones",
+              () => {
+
+                map.getCanvas()
+                  .style.cursor = "";
+              }
+            );
+
+            ready = true;
+
+            refresh();
+
+            $("status").textContent =
+              "2025 · 447 celdas · " +
+              "1,034 conexiones de vecindad · " +
+              "Selecciona una celda";
+          });
+
+        } catch (error) {
+
+          $("status").textContent =
+            `Error: ${error.message}`;
+
+          console.error(error);
+        }
+
+      })();
+
+    })();
+  </script>
+
+  <!-- ====================================
+       MOTOR THREE.JS
+       ==================================== -->
+
+  <script
+    type="module"
+    src="./21_red_espectral_three.js"
+  ></script>
+
+<script src="./22_puente.js" data-hotspot-view="urbano"></script>
+</body>
+</html>
